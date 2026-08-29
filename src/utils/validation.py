@@ -2,8 +2,8 @@ import re
 import uuid
 
 def is_valid_email(email):
-    # Permite TLDs con múltiples partes (ej. co.uk, com.mx)
-    pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$'
+    # TLD final de al menos 2 caracteres; permite múltiples segmentos (ej. co.uk)
+    pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9-]{2,}$'
     return re.match(pattern, email) is not None
 
 def is_valid_uuid(val):
