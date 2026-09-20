@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrega 1 - Microservicio Lista Negra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f4f6f9;
+            padding: 30px 20px;
+            color: #1e2a3a;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+            padding: 40px 45px;
+        }
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b1e33;
+            border-bottom: 4px solid #2a7de1;
+            padding-bottom: 12px;
+            margin-bottom: 28px;
+        }
+        h2 {
+            font-size: 1.6rem;
+            margin: 28px 0 16px 0;
+            color: #1a3a5e;
+            border-left: 5px solid #2a7de1;
+            padding-left: 16px;
+        }
+        h3 {
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+            color: #2c3e50;
+        }
+        .header-card {
+            background: #eef3fc;
+            padding: 20px 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-card .team {
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        .header-card .repo {
+            background: #1e2a3a;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+        .header-card .repo:hover {
+            background: #2a7de1;
+        }
+        .badge {
+            display: inline-block;
+            background: #27ae60;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 12px;
+            border-radius: 30px;
+            letter-spacing: 0.3px;
+        }
+        .badge.warning {
+            background: #f39c12;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 18px 22px;
+            border: 1px solid #e2e8f0;
+        }
+        .card h4 {
+            margin-bottom: 8px;
+            font-size: 1rem;
+            color: #1e2a3a;
+        }
+        .card p, .card li {
+            font-size: 0.95rem;
+            color: #2d3f55;
+        }
+        ul, ol {
+            padding-left: 22px;
+            margin: 8px 0;
+        }
+        li {
+            margin-bottom: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+        th {
+            background: #eef3fc;
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 600;
+            border-bottom: 2px solid #d0dbe8;
+        }
+        td {
+            padding: 8px 14px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .coverage-highlight {
+            background: #d4edda;
+            font-weight: 700;
+            color: #155724;
+            padding: 2px 12px;
+            border-radius: 30px;
+        }
+        .code-block {
+            background: #1e2a3a;
+            color: #e4e9f0;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            white-space: pre;
+            margin: 12px 0;
+        }
+        .capture-placeholder {
+            background: #f1f3f5;
+            border: 2px dashed #adb5bd;
+            border-radius: 10px;
+            padding: 30px 20px;
+            text-align: center;
+            color: #495057;
+            font-style: italic;
+            margin: 12px 0;
+        }
+        .capture-placeholder i {
+            display: block;
+            font-size: 0.9rem;
+        }
+        .footer-note {
+            margin-top: 36px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+            font-size: 0.9rem;
+            color: #4a5b6e;
+            text-align: center;
+        }
+        @media (max-width: 700px) {
+            .container { padding: 20px; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .header-card { flex-direction: column; align-items: flex-start; gap: 12px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- ========== PORTADA ========== -->
+    <h1>📋 Entrega 1 — Microservicio de Lista Negra de Emails</h1>
+
+    <div class="header-card">
+        <div>
+            <div class="team"><strong>Estudiantes:</strong> Carlos Villamil · Isabella Sofía · Liannys Sophia</div>
+            <div style="margin-top:6px; font-size:0.95rem;">
+                <strong>Asignatura:</strong> Electiva IV - Clase #2502 &nbsp;|&nbsp;
+                <strong>Docente:</strong> Ronald Carrascal Carreazo
+            </div>
+            <div style="font-size:0.95rem; margin-top:4px;">
+                <strong>Institución:</strong> Fundación Universitaria Tecnológico Comfenalco &nbsp;|&nbsp;
+                <strong>Programa:</strong> Ingeniería de Sistemas &nbsp;|&nbsp;
+                <strong>Fecha:</strong> Cartagena de Indias, 2026
+            </div>
+        </div>
+        <a href="https://github.com/Emiro-Mendez/blacklist-app" target="_blank" class="repo">🔗 Repositorio en GitHub</a>
+    </div>
+
+    <!-- ========== 1. TRABAJO EN EQUIPO ========== -->
+    <h2>1. Trabajo en equipo — historial de commits</h2>
+    <p>El desarrollo se realizó de forma distribuida en un mismo repositorio de GitHub (fork del repositorio original del profesor). Cada integrante hizo commits identificables de su parte del trabajo, siguiendo un ciclo de pruebas (TDD): escribir la prueba, verificar que falla, implementar la funcionalidad y verificar que la prueba pasa.</p>
+    <div class="capture-placeholder">
+        🖼️ Captura #1 — Historial de commits con los 3 integrantes<br>
+        <i>[Insertar captura de pantalla aquí]</i>
+    </div>
+
+    <!-- ========== 2. BASE DE DATOS ========== -->
+    <h2>2. Configuración de base de datos</h2>
+    <p>Para el desarrollo local se utilizó <strong>SQLite</strong> como motor de base de datos, configurado a través de la variable de entorno <code>DATABASE_URL=sqlite:///blacklist.db</code>. Esto permitió realizar pruebas sin necesidad de un servidor externo.</p>
+    <div class="capture-placeholder">
+        🖼️ Captura #2 — Archivo .env con variables de entorno<br>
+        <i>[Insertar captura de pantalla aquí]</i>
+    </div>
+
+    <!-- ========== 3. ESTRUCTURA ========== -->
+    <h2>3. Configuración del proyecto</h2>
+    <h3>3.1 Estructura del proyecto</h3>
+    <p>El proyecto sigue la estructura proporcionada por el profesor:</p>
+    <div class="code-block">
+blacklist_app/
+├── .github/workflows/
+│   └── tests.yml
+├── src/
+│   ├── db/
+│   │   ├── database.py
+│   │   └── models.py
+│   ├── middleware/
+│   │   └── auth_middleware.py
+│   ├── models/
+│   │   ├── blacklist.py
+│   │   └── errors.py
+│   ├── repositories/
+│   │   └── blacklist_repository.py
+│   ├── routes/
+│   │   └── blacklist_router.py
+│   ├── services/
+│   │   └── blacklist_service.py
+│   ├── utils/
+│   │   └── validation.py
+│   └── main.py
+├── tests/
+│   ├── integration/
+│   │   ├── test_blacklist_api.py
+│   │   └── test_blacklist_full_flow.py
+│   └── unit/
+│       ├── test_auth_middleware.py
+│       ├── test_blacklist_service.py
+│       ├── test_validation.py
+│       ├── test_blacklist_model.py
+│       └── test_blacklist_repository.py
+├── .env
+├── pyproject.toml
+└── README.md
+    </div>
+    <div class="capture-placeholder">
+        🖼️ Captura #3 — Estructura del proyecto en VS Code<br>
+        <i>[Insertar captura de pantalla aquí]</i>
+    </div>
+
+    <h3>3.2 Variables de entorno</h3>
+    <p>Se configuraron las siguientes variables en el archivo <code>.env</code>:</p>
+    <table>
+        <thead><tr><th>Variable</th><th>Valor</th></tr></thead>
+        <tbody>
+            <tr><td><code>DATABASE_URL</code></td><td><code>sqlite:///blacklist.db</code></td></tr>
+            <tr><td><code>BEARER_TOKEN</code></td><td><code>dev-token-12345</code></td></tr>
+            <tr><td><code>FLASK_ENV</code></td><td><code>development</code></td></tr>
+            <tr><td><code>FLASK_APP</code></td><td><code>src.main</code></td></tr>
+            <tr><td><code>PORT</code></td><td><code>5000</code></td></tr>
+        </tbody>
+    </table>
+
+    <!-- ========== 4. INTEGRACIÓN CONTINUA ========== -->
+    <h2>4. Integración Continua con GitHub Actions</h2>
+    <p>Se configuró un workflow de GitHub Actions para ejecutar automáticamente las pruebas en cada <code>push</code> y <code>pull request</code>.</p>
+
+    <h3>4.1 Workflow de pruebas</h3>
+    <p>El archivo <code>.github/workflows/tests.yml</code> ejecuta:</p>
+    <ul>
+        <li>Checkout del código</li>
+        <li>Configuración de Python 3.11</li>
+        <li>Instalación de dependencias con Poetry</li>
+        <li>Ejecución de pruebas con cobertura</li>
+        <li>Verificación de cobertura ≥ 90%</li>
+    </ul>
+
+    <h3>4.2 Resultados de los workflows</h3>
+    <table>
+        <thead><tr><th>Workflow</th><th>Evento</th><th>Estado</th><th>Tiempo</th></tr></thead>
+        <tbody>
+            <tr><td>Tests y Cobertura #1</td><td>Push (main)</td><td><span class="badge">✅ Success</span></td><td>21s</td></tr>
+            <tr><td>Tests y Cobertura #2</td><td>Push (main)</td><td><span class="badge">✅ Success</span></td><td>24s</td></tr>
+            <tr><td>Tests y Cobertura (PR)</td><td>Pull Request</td><td><span class="badge">✅ Success</span></td><td>—</td></tr>
+        </tbody>
+    </table>
+    <div class="capture-placeholder">
+        🖼️ Captura #4 — Pestaña Actions con todos los workflows en verde<br>
+        <i>[Insertar captura de pantalla aquí]</i>
+    </div>
+
+    <!-- ========== 5. COBERTURA ========== -->
+    <h2>5. Cobertura de pruebas (90% requerido)</h2>
+    <p>Se desarrollaron pruebas unitarias y de integración para los endpoints <code>POST /blacklists</code> (agregar email) y <code>GET /blacklists/&lt;email&gt;</code> (consultar email), cubriendo casos exitosos, validaciones, autenticación y manejo de errores.</p>
+
+    <div class="grid-2">
+        <div class="card">
+            <h4>🧪 Pruebas unitarias</h4>
+            <ul>
+                <li><strong>test_blacklist_service.py</strong> — 4 pruebas</li>
+                <li><strong>test_validation.py</strong> — 6 pruebas</li>
+                <li><strong>test_auth_middleware.py</strong> — 3 pruebas</li>
+                <li><strong>test_blacklist_model.py</strong> — 2 pruebas</li>
+                <li><strong>test_blacklist_repository.py</strong> — 3 pruebas</li>
+                <li><strong>test_database.py</strong> — 3 pruebas</li>
+                <li><strong>test_main.py</strong> — 5 pruebas</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h4>🔗 Pruebas de integración</h4>
+            <ul>
+                <li><strong>test_blacklist_api.py</strong> — 9 pruebas</li>
+                <li><strong>test_blacklist_full_flow.py</strong> — 3 pruebas</li>
+            </ul>
+            <p style="margin-top:12px;"><strong>Total:</strong> 29 pruebas &nbsp; <span class="badge">✅ 29 passed, 0 failed</span></p>
+        </div>
+    </div>
+
+    <h3>5.3 Resultado de cobertura</h3>
+    <table>
+        <thead><tr><th>Archivo</th><th>Sentencias</th><th>No cubiertas</th><th>Cobertura</th></tr></thead>
+        <tbody>
+            <tr><td>src/db/database.py</td><td>18</td><td>0</td><td>100%</td></tr>
+            <tr><td>src/main.py</td><td>43</td><td>3</td><td>93%</td></tr>
+            <tr><td>src/middleware/auth_middleware.py</td><td>18</td><td>0</td><td>100%</td></tr>
+            <tr><td>src/models/blacklist.py</td><td>11</td><td>0</td><td>100%</td></tr>
+            <tr><td>src/models/errors.py</td><td>8</td><td>0</td><td>100%</td></tr>
+            <tr><td>src/repositories/blacklist_repository.py</td><td>10</td><td>0</td><td>100%</td></tr>
+            <tr><td>src/routes/blacklist_router.py</td><td>33</td><td>1</td><td>97%</td></tr>
+            <tr><td>src/services/blacklist_service.py</td><td>11</td><td>0</td><td>100%</td></tr>
+            <tr><td>src/utils/validation.py</td><td>11</td><td>0</td><td>100%</td></tr>
+            <tr style="font-weight:700; background:#f0f9f0;">
+                <td><strong>TOTAL</strong></td><td><strong>176</strong></td><td><strong>17</strong></td><td><span class="coverage-highlight">90%</span></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="capture-placeholder">
+        🖼️ Captura #5 — Reporte de cobertura <code>pytest --cov=src</code><br>
+        <i>[Insertar captura de pantalla aquí]</i>
+    </div>
+
+    <!-- ========== 6. PULL REQUESTS ========== -->
+    <h2>6. Pull Requests y revisión de código</h2>
+    <p>Se crearon Pull Requests para integrar el trabajo de las colaboradoras (en este caso, se trabajó con ramas y revisión entre el equipo).</p>
+    <table>
+        <thead><tr><th>Pull Request</th><th>Autor</th><th>Archivos</th><th>Estado</th></tr></thead>
+        <tbody>
+            <tr><td>PR #1</td><td>Isabella</td><td>test_blacklist_model.py</td><td><span class="badge">✅ Aprobado y mergeado</span></td></tr>
+            <tr><td>PR #2</td><td>Liannys</td><td>test_blacklist_full_flow.py</td><td><span class="badge">✅ Aprobado y mergeado</span></td></tr>
+        </tbody>
+    </table>
+    <div class="capture-placeholder">
+        🖼️ Captura #6 — Pull Requests creados y mergeados<br>
+        <i>[Insertar captura de pantalla aquí]</i>
+    </div>
+
+    <!-- ========== 7. CONCLUSIONES ========== -->
+    <h2>7. Conclusiones</h2>
+    <p>Se cumplieron los tres puntos requeridos para la Entrega 1:</p>
+    <ul>
+        <li><strong>✅ Configuración del proyecto:</strong> Estructura completa con variables de entorno y dependencias gestionadas con Poetry.</li>
+        <li><strong>✅ Integración continua:</strong> Workflow de GitHub Actions configurado con ejecución automática de pruebas y verificación de cobertura.</li>
+        <li><strong>✅ Cobertura de pruebas:</strong> <span class="coverage-highlight">90%</span> de cobertura alcanzado, superando el mínimo requerido.</li>
+    </ul>
+    <p>El trabajo en equipo se realizó de forma distribuida mediante ramas y Pull Requests, permitiendo que cada integrante contribuyera al proyecto de manera organizada y con revisión de código.</p>
+
+    <div class="footer-note">
+        <strong>Repositorio:</strong> <a href="https://github.com/Emiro-Mendez/blacklist-app" target="_blank">github.com/Emiro-Mendez/blacklist-app</a> &nbsp;·&nbsp;
+        <strong>Estado:</strong> ✅ Todas las pruebas pasan · Cobertura ≥ 90% · GitHub Actions en verde
+    </div>
+
+</div>
+</body>
+</html>
