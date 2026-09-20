@@ -70,16 +70,18 @@ jobs:
       - name: Levantar servicios con Docker Compose
         run: docker compose up -d --build
 
-      - name: Esperar a que la app este lista
+      - name: Esperar inicializacion de PostgreSQL y API
         run: |
+          echo "Esperando a que la base de datos y la API inicien..."
+          sleep 10
           for i in {1..30}; do
             if curl -s http://localhost:5001/blacklists/ping | grep -q pong; then
-              echo "App lista"
+              echo "✅ App lista y respondiendo en el puerto 5001"
               exit 0
             fi
             sleep 2
           done
-          echo "ERROR: La app no respondio"
+          echo "❌ ERROR: La app no respondio a tiempo"
           docker compose logs
           exit 1
 
