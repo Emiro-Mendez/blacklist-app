@@ -70,18 +70,18 @@ jobs:
       - name: Levantar servicios con Docker Compose
         run: docker compose up -d --build
 
-      - name: Esperar a que la app este lista
+      - name: Esperar inicializacion revisando los logs
         run: |
-          echo "Esperando a que PostgreSQL y Flask completen la inicializacion..."
+          echo "Esperando a que la API confirme la conexion a la BD..."
           for i in {1..40}; do
-            RESPONSE=$(curl -s http://localhost:5001/blacklists/ping || true)
-            if echo "$RESPONSE" | grep -q "pong"; then
-              echo "✅ App lista y respondiendo en el intento $i"
+            # Buscamos la frase exacta que emite tu app al estar lista
+            if docker compose logs | grep -q "Tablas creadas correctamente"; then
+              echo "✅ App y Base de Datos listas (Intento $i)"
               exit 0
             fi
             sleep 3
           done
-          echo "❌ ERROR: La app no respondio tras 120 segundos"
+          echo "❌ ERROR: La app no confirmo la creacion de tablas."
           docker compose logs
           exit 1
 
