@@ -93,12 +93,7 @@ jobs:
         run: npm install -g newman
 
       - name: Ejecutar pruebas de integracion con Newman
-        continue-on-error: true
-        run: |
-          newman run blacklist-api.postman_collection.json \
-            --env-var baseUrl=http://localhost:5001 \
-            --env-var token=test-token-12345 \
-            --env-var BEARER_TOKEN=test-token-12345
+        run: newman run blacklist-api.postman_collection.json --env-var baseUrl=http://localhost:5001 --env-var token=test-token-12345
 
       - name: Detener servicios
         if: always()
